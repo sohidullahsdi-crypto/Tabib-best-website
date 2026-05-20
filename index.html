@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Multi-Functional Interface</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c10;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end; /* প্যানেলটিকে স্ক্রিনের নিচের দিকে রাখার জন্য */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ব্যাকগ্রাউন্ড ফ্রেম সেটিংস */
+        .bg-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 1;
+        }
+
+        /* মেইন কন্ট্রোল প্যানেল */
+        .main-panel {
+            position: relative;
+            z-index: 10;
+            background: rgba(26, 26, 36, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #1f2833;
+            border-radius: 12px;
+            padding: 15px; 
+            width: 100%;
+            max-width: 380px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+            margin-bottom: 10px; 
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* হাইড হলে প্যানেলটি একদম ছোট ও মিনিমাল হয়ে যাবে */
+        .main-panel.is-hidden-mode {
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            max-width: fit-content;
+            margin-left: auto;
+            margin-bottom: 20px;
+        }
+
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+
+        /* হাইড মোডে হেডার বর্ডার ও টাইটেল উধাও হবে */
+        .main-panel.is-hidden-mode .header-area {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        h3 { color: #66fcf1; font-size: 16px; } 
+
+        /* টগল বাটন */
+        .toggle-btn {
+            background-color: #45f3ff;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        /* হাইড করার ক্লাস */
+        .hidden-content {
+            display: none !important;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .input-btn {
+            background-color: #1f2833;
+            color: #66fcf1;
+            border: 1px solid #45f3ff;
+            padding: 8px 4px; 
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .input-btn:hover {
+            background-color: #45f3ff;
+            color: #0b0c10;
+        }
+
+        .display-section {
+            background: #0b0c10;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 3px solid #66fcf1;
+            font-size: 13px;
+        }
+
+        .badge-container {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .badge {
+            background: #c5a059;
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .analysis-box {
+            background: #152238;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            line-height: 1.4;
+            border-left: 3px solid #ff4757;
+        }
+
+        /* বটম বাটন লেআউট */
+        .bottom-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 6px;
+        }
+
+        .reset-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover { background-color: #ff6b81; }
+    </style>
+</head>
+<body>
+
+<!-- ব্যাকগ্রাউন্ডে ওয়েবসাইট লোড করার ফ্রেম -->
+<iframe class="bg-frame" src="https://dkwin9.com/#/register?invitationCode=78368464931"></iframe>
+
+<!-- মেইন কন্ট্রোল প্যানেল ইন্টারফেস -->
+<div class="main-panel" id="panel">
+    <div class="header-area">
+        <h3 id="panel-title">Data Analyzer Panel</h3>
+        <button class="toggle-btn" onclick="togglePanel()" id="hideShowBtn">Hide Panel</button>
+    </div>
+
+    <!-- এই অংশটি হাইড বা শো হবে -->
+    <div id="panel-content">
+        <p style="font-size: 11px; color: #aaa; margin-bottom: 10px;">লাস্ট ৩টি রেজাল্ট ইনপুট করুন:</p>
+        
+        <div class="btn-grid">
+            <button class="input-btn" onclick="pressData(1.00)">1.00</button>
+            <button class="input-btn" onclick="pressData(1.50)">1.50</button>
+            <button class="input-btn" onclick="pressData(2.00)">2.00</button>
+            <button class="input-btn" onclick="pressData(2.50)">2.50</button>
+            <button class="input-btn" onclick="pressData(3.00)">3.00</button>
+            <button class="input-btn" onclick="pressData(3.50)">3.50</button>
+            <button class="input-btn" onclick="pressData(4.00)">4.00</button>
+            <button class="input-btn" onclick="pressData(4.50)">4.50</button>
+            <button class="input-btn" onclick="pressData(5.00)">5.00</button>
+            <button class="input-btn" onclick="pressData(10.00)">10.00</button>
+        </div>
+
+        <div class="display-section">
+            <strong>ইনপুট হিস্টোরি (সর্বশেষ ৩টি):</strong>
+            <div class="badge-container" id="history-box">কোনো ডাটা নেই</div>
+        </div>
+
+        <div class="analysis-box">
+            <strong>প্যাটার্ন ও লজিক অ্যানালাইসিস:</strong>
+            <div id="logic-output" style="margin-top: 5px; color: #dae1e7;">দয়া করে ডাটা ইনপুট দেওয়া শুরু করুন।</div>
+        </div>
+
+        <div class="bottom-controls">
+            <button class="reset-btn" onclick="resetAllData()">Reset Data</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dataStore = [];
+    let isHidden = false;
+
+    // হাইড এবং শো ফাংশন
+    function togglePanel() {
+        const content = document.getElementById('panel-content');
+        const btn = document.getElementById('hideShowBtn');
+        const panel = document.getElementById('panel');
+        const title = document.getElementById('panel-title');
+        
+        if (!isHidden) {
+            content.classList.add('hidden-content');
+            title.classList.add('hidden-content'); 
+            panel.classList.add('is-hidden-mode'); 
+            btn.innerText = "Show Panel";
+            isHidden = true;
+        } else {
+            content.classList.remove('hidden-content');
+            title.classList.remove('hidden-content');
+            panel.classList.remove('is-hidden-mode');
+            btn.innerText = "Hide Panel";
+            isHidden = false;
+        }
+    }
+
+    // ডাটা ইনপুট ফাংশন
+    function pressData(value) {
+        dataStore.push(value);
+        if (dataStore.length > 3) {
+            dataStore.shift(); // এখন ৩টির বেশি হলে আগেরটি রিমুভ হবে
+        }
+        processPattern();
+    }
+
+    // রিসেট ফাংশন
+    function resetAllData() {
+        dataStore = [];
+        document.getElementById('history-box').innerHTML = 'কোনো ডাটা নেই';
+        document.getElementById('logic-output').innerHTML = 'ডাটা সম্পূর্ণ রিসেট করা হয়েছে। নতুন ডাটা দিন।';
+    }
+
+    // প্যাটার্ন ও ট্রেন্ড ক্যালকুলেশন লজিক
+    function processPattern() {
+        const historyBox = document.getElementById('history-box');
+        const logicOutput = document.getElementById('logic-output');
+
+        // হিস্টোরি UI আপডেট
+        historyBox.innerHTML = dataStore.map(val => `<span class="badge">${val.toFixed(2)}x</span>`).join('');
+
+        if (dataStore.length < 3) {
+            logicOutput.innerHTML = `বিশ্লেষণের জন্য আরও ${3 - dataStore.length}টি ডাটা প্রয়োজন।`;
+            return;
+        }
+
+        // গাণিতিক লজিক ১: গড় মান (Average Trend)
+        let sum = dataStore.reduce((a, b) => a + b, 0);
+        let avg = sum / dataStore.length;
+        let marketTrend = avg > 2.50 ? "High Multiplier Zone" : "Low Constant Zone";
+
+        // গাণিতিক লজিক ২: শেষ দুটি সংখ্যার তুলনা
+        let lastIdx = dataStore.length - 1;
+        let movement = dataStore[lastIdx] >= dataStore[lastIdx - 1] ? "Upward (উর্ধ্বমুখী)" : "Downward (নিম্নমুখী)";
+
+        // স্বাধীন র্যান্ডম সিগনাল মেকানিজম
+        let simulatedNext = (Math.random() * 4 + 1).toFixed(2); 
+
+        // আউটপুট প্রদর্শন
+        logicOutput.innerHTML = `
+            <strong>মার্কেট জোন:</strong> <span style="color:#66fcf1">${marketTrend}</span> (গড়: ${avg.toFixed(2)}x)<br>
+            <strong>মুভমেন্ট লজিক:</strong> মার্কেট বর্তমানে ${movement} অবস্থায় রয়েছে।<br>
+            <strong>পরবর্তী আউটপুট:</strong> <span style="color:#ff4757; font-size:14px; font-weight:bold;">${simulatedNext}x</span><br>
+            <small style="color: #888; font-size: 10px; display:block; margin-top:4px;">* লাইভ সার্ভারের ক্রিপ্টোগ্রাফিক হ্যাশ অনুমান করা সম্ভব নয়। সতর্ক থাকুন।</small>
+        `;
+    }
+</script>
+
+</body>
+</html>
